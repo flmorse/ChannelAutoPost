@@ -40,14 +40,25 @@ except Exception as ap:
 
 @BotzHubUser.on(events.NewMessage(incoming=True, chats=FROM))
 async def sender_bH(event):
-    for i in TO:
-        try:
-            await BotzHubUser.send_message(
-                i,
-                event.message
-            )
-        except Exception as e:
-            print(e)
+    try:
+        if event.poll:
+            return
+        if event.photo:
+            photo = event.media.photo
+            await BotzHubUser.send_file(TO_, photo, caption = event.text, link_preview = False)
+        elif event.media:
+            try:
+                if event.media.webpage:
+                    await BotzHubUser.send_message(TO_, event.text, link_preview = False)
+                    return
+            except:
+                media = event.media.document
+                await BotzHubUser.send_file(TO_, media, caption = event.text, link_preview = False)
+                return
+        else:
+            await BotzHubUser.send_message(TO_, event.text, link_preview = False)
+    except:
+        print("TO_CHANNEL ID is wrong or I can't send messages there (make me admin).")
 
 print("Bot has started.")
 BotzHubUser.run_until_disconnected()
