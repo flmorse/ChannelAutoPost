@@ -55,8 +55,9 @@ async def sender_bH(event):
                 media = event.media.document
                 await BotzHubUser.send_file(TO_, media, caption = event.text, link_preview = False)
                 return
-        else:
-            await BotzHubUser.send_message(TO_, event.text, link_preview = False)
+        elif event.video:
+            video = event.media.video
+            await BotzHubUser.send_file(TO_, video, caption = event.text, link_preview = False)
     except:
         print("TO_CHANNEL ID is wrong or I can't send messages there (make me admin).")
 
